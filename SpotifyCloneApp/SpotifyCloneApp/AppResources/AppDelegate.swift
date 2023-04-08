@@ -15,9 +15,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         let window = UIWindow(frame: UIScreen.main.bounds)
-        window.rootViewController = HomeViewController()
+        
+        if AuthManager.shared.isSignedIn {
+            window.rootViewController = TabBarViewController()
+        } else {
+            window.rootViewController = UINavigationController(rootViewController: WelcomeViewController()  )
+        }
+        
         window.makeKeyAndVisible()
         self.window = window
+        
+        AuthManager.shared.refreshAccessTokenIfNeeded { success in
+            print(success)
+        }
         
         return true
     }
